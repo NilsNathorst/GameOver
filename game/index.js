@@ -1,13 +1,12 @@
-import Phaser from 'phaser';
-import TestScene from './scenes/TestScene.js';
-import BackgrondScene from './scenes/BackgroundScene.js';
+import Phaser from "phaser";
+import TestScene from "./scenes/TestScene.js";
 
 const config = {
   type: Phaser.AUTO,
   width: 640,
   height: 640,
   physics: {
-    default: 'arcade',
+    default: "arcade",
 
     arcade: {
       gravity: {

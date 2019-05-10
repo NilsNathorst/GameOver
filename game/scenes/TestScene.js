@@ -1,6 +1,7 @@
 import playerSprite from "../../assets/sprites/playerSprite.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
+import background from "../../assets/bg.png";
 let player;
 let opponent;
 let bombs;
@@ -9,6 +10,7 @@ let cursors;
 let score = 0;
 let gameOver = false;
 let scoreText;
+let bg;
 const config = {
   key: "TestScene"
   // active: false,
@@ -28,6 +30,7 @@ class TestScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image("bg", background);
     this.load.image("ground", ground);
     this.load.spritesheet("playerSprite", playerSprite, {
       frameWidth: 32,
@@ -39,6 +42,10 @@ class TestScene extends Phaser.Scene {
     });
   }
   create() {
+    bg = this.add.sprite(400, 250, "bg");
+    bg.frame.cutHeight = 645;
+    console.log(bg);
+
     this.map = this.make.tilemap({
       key: "map"
     });
