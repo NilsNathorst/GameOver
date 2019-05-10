@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser';
 import TestScene from './scenes/TestScene.js';
 import BackgrondScene from './scenes/BackgroundScene.js';
@@ -14,7 +15,7 @@ const config = {
       debug: false
     }
   },
-  scene: [BackgrondScene]
+  scene: [TestScene]
 };
 const createGame = () => {
   game = new Phaser.Game(config);
