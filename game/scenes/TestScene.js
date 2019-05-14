@@ -2,6 +2,7 @@ import playerSprite from "../../assets/sprites/playerSprite.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import background from "../../assets/bg.png";
+import redBall from "../../assets/Ellipse.png";
 let player;
 let opponent;
 let bombs;
@@ -11,6 +12,7 @@ let score = 0;
 let gameOver = false;
 let scoreText;
 let bg;
+let ball;
 const config = {
   key: "TestScene"
   // active: false,
@@ -32,6 +34,8 @@ class TestScene extends Phaser.Scene {
   preload() {
     this.load.image("bg", background);
     this.load.image("ground", ground);
+    this.load.image("ball", redBall);
+
     this.load.spritesheet("playerSprite", playerSprite, {
       frameWidth: 32,
       frameHeight: 48
@@ -42,9 +46,9 @@ class TestScene extends Phaser.Scene {
     });
   }
   create() {
+    // background
     bg = this.add.sprite(400, 250, "bg");
     bg.frame.cutHeight = 645;
-    console.log(bg);
 
     this.map = this.make.tilemap({
       key: "map"
@@ -87,9 +91,19 @@ class TestScene extends Phaser.Scene {
     cursors = this.input.keyboard.createCursorKeys();
     console.log(cursors);
 
+    // red ball conditions
+    ball = this.physics.add.sprite(200, 0, "ball");
+
+    ball.setDrag(50, 50);
+    ball.setBounce(0.4);
+
+    // colliders
     this.physics.add.collider(player, platform);
     this.physics.add.collider(opponent, platform);
     this.physics.add.collider(player, opponent);
+    this.physics.add.collider(ball, platform);
+    this.physics.add.collider(ball, player);
+    this.physics.add.collider(ball, opponent);
   }
 
   update() {
