@@ -92,7 +92,7 @@ class TestScene extends Phaser.Scene {
     console.log(cursors);
 
     // red ball conditions
-    ball = this.physics.add.sprite(200, 0, "ball");
+    ball = this.physics.add.sprite(260, 0, "ball");
 
     ball.setDrag(50, 50);
     ball.setBounce(0.4);
