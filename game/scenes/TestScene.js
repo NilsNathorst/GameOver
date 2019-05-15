@@ -3,6 +3,7 @@ import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
+import { nextTick } from "q";
 let player;
 let opponent;
 let bombs;
@@ -90,20 +91,20 @@ class TestScene extends Phaser.Scene {
     });
 
     // red ball conditions
-    ball = this.physics.add.sprite(260, 0, "ball");
+    // ball = this.physics.add.sprite(260, 0, "ball");
 
-    ball.setDrag(50, 50);
-    ball.setBounce(0.4);
+    // ball.setDrag(50, 50);
+    // ball.setBounce(0.4);
 
-    this.anims.create({
-      key: "space",
-      frames: this.anims.generateFrameNumbers("playerSprite", {
-        start: 1,
-        end: 1
-      }),
-      frameRate: 0,
-      repeat: 0
-    });
+    // this.anims.create({
+    //   key: "space",
+    //   frames: this.anims.generateFrameNumbers("playerSprite", {
+    //     start: 1,
+    //     end: 1
+    //   }),
+    //   frameRate: 0,
+    //   repeat: 4
+    // });
     cursors = this.input.keyboard.createCursorKeys();
     console.log(cursors);
 
@@ -111,12 +112,12 @@ class TestScene extends Phaser.Scene {
     this.physics.add.collider(player, platform);
     this.physics.add.collider(opponent, platform);
     this.physics.add.collider(player, opponent);
-    this.physics.add.collider(ball, platform);
-    this.physics.add.collider(ball, player);
-    this.physics.add.collider(ball, opponent);
+    // this.physics.add.collider(ball, platform);
+    // this.physics.add.collider(ball, player);
+    // this.physics.add.collider(ball, opponent);
   }
 
-  update() {
+  update(time) {
     if (gameOver) {
       return;
     }
@@ -128,16 +129,19 @@ class TestScene extends Phaser.Scene {
     } else if (cursors.right.isDown) {
       player.setVelocityX(160);
       bg.x -= 0.5;
-
       player.anims.play("right", true);
-    } else if (cursors.space.isDown) {
+    } else if (cursors.space.isDown && !this.shoot) {
       player.setVelocityX(0);
-      console.log(player.x);
+      console.log(cursors);
+      this.shoot = true;
+      this.shootCoolDownTime = time + 500;
       ball = this.physics.add.sprite(player.x + 20, player.y, "ball");
 
       ball.setDrag(50, 50);
-      // ball.setBounce(0.4);
+      ball.setBounce(0.7);
       this.physics.add.collider(ball, platform);
+      this.physics.add.collider(ball, player);
+      this.physics.add.collider(ball, opponent);
       bg.x -= 0.5;
 
       player.anims.play("space", true);
@@ -145,6 +149,10 @@ class TestScene extends Phaser.Scene {
       player.setVelocityX(0);
 
       player.anims.play("turn");
+    }
+
+    if (time > this.shootCoolDownTime) {
+      this.shoot = false;
     }
     if (cursors.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
