@@ -3,7 +3,6 @@ import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
-import { nextTick } from "q";
 let player;
 let opponent;
 let bombs;
@@ -127,8 +126,8 @@ class TestScene extends Phaser.Scene {
       // setting how many shoots you can do
       this.shootCoolDownTime = time + 500;
       ball = this.physics.add.sprite(player.x, player.y, "ball");
-      console.log(this.input);
-      // ball.setVelocityX();
+      console.log(this.input.mousePointer.midPoint.x);
+      ball.setVelocityX(this.input.mousePointer.midPoint.x);
 
       ball.setDrag(50, 50);
       ball.setBounce(0.7);
