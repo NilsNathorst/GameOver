@@ -88,14 +88,24 @@ class TestScene extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
-    cursors = this.input.keyboard.createCursorKeys();
-    console.log(cursors);
 
     // red ball conditions
     ball = this.physics.add.sprite(260, 0, "ball");
 
     ball.setDrag(50, 50);
     ball.setBounce(0.4);
+
+    this.anims.create({
+      key: "space",
+      frames: this.anims.generateFrameNumbers("playerSprite", {
+        start: 1,
+        end: 1
+      }),
+      frameRate: 0,
+      repeat: 0
+    });
+    cursors = this.input.keyboard.createCursorKeys();
+    console.log(cursors);
 
     // colliders
     this.physics.add.collider(player, platform);
@@ -120,6 +130,17 @@ class TestScene extends Phaser.Scene {
       bg.x -= 0.5;
 
       player.anims.play("right", true);
+    } else if (cursors.space.isDown) {
+      player.setVelocityX(0);
+      console.log(player.x);
+      ball = this.physics.add.sprite(player.x + 20, player.y, "ball");
+
+      ball.setDrag(50, 50);
+      // ball.setBounce(0.4);
+      this.physics.add.collider(ball, platform);
+      bg.x -= 0.5;
+
+      player.anims.play("space", true);
     } else {
       player.setVelocityX(0);
 
