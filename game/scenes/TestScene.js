@@ -1,31 +1,18 @@
 import playerSprite from "../../assets/sprites/playerSprite.png";
+import bloodSprite from "../../assets/sprites/blood.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
+let ballForce = 0;
 let player;
 let opponent;
-let bombs;
 let platform;
 let cursors;
-let score = 0;
 let gameOver = false;
-let scoreText;
 let bg;
 let ball;
-const config = {
-  key: "TestScene"
-  // active: false,
-  // visible: true,
-  // pack: false,
-  // cameras: null,
-  // map: {},
-  // physics: {},
-  // loader: {},
-  // plugins: false,
-  // input: {}
-};
-
+let blood;
 class TestScene extends Phaser.Scene {
   constructor(config) {
     super(config);
@@ -36,6 +23,10 @@ class TestScene extends Phaser.Scene {
     this.load.image("ground", ground);
     this.load.image("ball", redBall);
 
+    this.load.spritesheet("bloodSprite", bloodSprite, {
+      frameWidth: 32,
+      frameHeight: 48
+    });
     this.load.spritesheet("playerSprite", playerSprite, {
       frameWidth: 32,
       frameHeight: 48
@@ -57,12 +48,22 @@ class TestScene extends Phaser.Scene {
 
     platform.create(320, 320, "ground");
     player = this.physics.add.sprite(220, 0, "playerSprite");
+    blood = this.add.sprite(-1000, -1220, "bloodSprite");
     opponent = this.physics.add.sprite(420, 0, "enemySprite");
     player.setBounce(0.45);
     player.setCollideWorldBounds(true);
     opponent.setBounce(0.45);
     opponent.setCollideWorldBounds(true);
 
+    this.anims.create({
+      key: "hit",
+      frames: this.anims.generateFrameNumbers("bloodSprite", {
+        start: 0,
+        end: 6
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("playerSprite", {
@@ -86,48 +87,81 @@ class TestScene extends Phaser.Scene {
         end: 8
       }),
       frameRate: 10,
-      repeat: -1
+      repeat: 1
     });
+
     cursors = this.input.keyboard.createCursorKeys();
-    console.log(cursors);
-
-    // red ball conditions
-    ball = this.physics.add.sprite(260, 0, "ball");
-
-    ball.setDrag(50, 50);
-    ball.setBounce(0.4);
+    cursors.a = "a";
 
     // colliders
     this.physics.add.collider(player, platform);
     this.physics.add.collider(opponent, platform);
     this.physics.add.collider(player, opponent);
-    this.physics.add.collider(ball, platform);
-    this.physics.add.collider(ball, player);
-    this.physics.add.collider(ball, opponent);
   }
 
-  update() {
+  update(time) {
     if (gameOver) {
       return;
     }
+
+    if (cursors.space.isDown && !this.shoot) {
+      this.shoot = true;
+      ball = this.physics.add.sprite(player.x, player.y, "ball");
+      // setting how many shoots you can do
+      this.shootCoolDownTime = time + 500;
+      ball.setVelocityX(ballForce);
+
+      ball.setDrag(50, 50);
+      ball.setBounce(0.7);
+
+      bg.x -= 0.5;
+      this.physics.add.collider(ball, platform);
+      this.physics.add.collider(ball, player);
+      this.physics.add.collider(ball, opponent);
+    }
+
     if (cursors.left.isDown) {
       player.setVelocityX(-160);
+      ballForce = -400;
       bg.x += 0.5;
 
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
       player.setVelocityX(160);
-      bg.x -= 0.5;
+      ballForce = 400;
 
+      bg.x -= 0.5;
       player.anims.play("right", true);
     } else {
       player.setVelocityX(0);
 
       player.anims.play("turn");
     }
+
+    if (time > this.shootCoolDownTime) {
+      this.shoot = false;
+    }
+
     if (cursors.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
+    if (
+      opponent.body.touching.left ||
+      opponent.body.touching.right ||
+      opponent.body.touching.up
+    ) {
+      blood = this.add.sprite(opponent.x, opponent.y, "bloodSprite");
+      console.log("ouch");
+      blood.anims.play("hit");
+    }
+    if (blood.anims && blood.anims.currentFrame != null) {
+      if (blood.anims.currentFrame.index == 6) {
+        blood.anims.stop("hit");
+        blood.anims.remove("hit");
+        blood.destroy();
+      }
+    }
   }
 }
+
 export default TestScene;
