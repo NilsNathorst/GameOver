@@ -90,23 +90,6 @@ class TestScene extends Phaser.Scene {
     this.physics.add.collider(player, opponent);
   }
 
-  // createBall(value) {
-  //   if (cursors.space.isDown && !this.shoot) {
-  //     this.shoot = true;
-  //     // setting how many shoots you can do
-  //     this.shootCoolDownTime = time + 500;
-  //     ball = this.physics.add.sprite(player.x, player.y, "ball");
-  //     console.log(player);
-  //     ball.setVelocityX(value);
-
-  //     ball.setDrag(50, 50);
-  //     ball.setBounce(0.7);
-  //     this.physics.add.collider(ball, platform);
-  //     this.physics.add.collider(ball, player);
-  //     this.physics.add.collider(ball, opponent);
-  //     bg.x -= 0.5;
-  //   }
-  // }
   update(time) {
     if (gameOver) {
       return;
