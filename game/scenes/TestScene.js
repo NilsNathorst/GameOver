@@ -4,7 +4,12 @@ import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
+<<<<<<< HEAD
 let ballForce = 0;
+=======
+let ballForceX = -200;
+let ballForceY = 0;
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
 let player;
 let opponent;
 let platform;
@@ -12,7 +17,11 @@ let cursors;
 let gameOver = false;
 let bg;
 let ball;
+<<<<<<< HEAD
 let blood;
+=======
+
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
 class TestScene extends Phaser.Scene {
   constructor(config) {
     super(config);
@@ -53,6 +62,7 @@ class TestScene extends Phaser.Scene {
     player.setBounce(0.45);
     player.setCollideWorldBounds(true);
     opponent.setBounce(0.45);
+    opponent.setDrag(50, 50);
     opponent.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -92,6 +102,10 @@ class TestScene extends Phaser.Scene {
 
     cursors = this.input.keyboard.createCursorKeys();
     cursors.a = "a";
+<<<<<<< HEAD
+=======
+    console.log(cursors);
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
 
     // colliders
     this.physics.add.collider(player, platform);
@@ -106,6 +120,7 @@ class TestScene extends Phaser.Scene {
 
     if (cursors.space.isDown && !this.shoot) {
       this.shoot = true;
+<<<<<<< HEAD
       ball = this.physics.add.sprite(player.x, player.y, "ball");
       // setting how many shoots you can do
       this.shootCoolDownTime = time + 500;
@@ -118,18 +133,41 @@ class TestScene extends Phaser.Scene {
       this.physics.add.collider(ball, platform);
       this.physics.add.collider(ball, player);
       this.physics.add.collider(ball, opponent);
+=======
+      // setting how many shoots you can do
+      this.shootCoolDownTime = time + 500;
+      ball = this.physics.add.sprite(player.x, player.y, "ball");
+      ball.setVelocityX(ballForceX);
+      ball.setVelocityY(ballForceY);
+
+      ball.setDrag(50, 50);
+      ball.setMass(10);
+      ball.setBounce(0.7);
+      this.physics.add.collider(ball, platform);
+      this.physics.add.collider(ball, player);
+      this.physics.add.collider(ball, opponent);
+      bg.x -= 0.5;
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
     }
 
     if (cursors.left.isDown) {
       player.setVelocityX(-160);
+<<<<<<< HEAD
       ballForce = -400;
+=======
+      ballForceX = -400;
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
       bg.x += 0.5;
 
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
       player.setVelocityX(160);
+<<<<<<< HEAD
       ballForce = 400;
 
+=======
+      ballForceX = 400;
+>>>>>>> 4ee5a7db93878bb41760c0b0063a76cf9f6fe3be
       bg.x -= 0.5;
       player.anims.play("right", true);
     } else {
