@@ -2,6 +2,7 @@ import playerSprite from "../../assets/sprites/playerSprite.png";
 import bloodSprite from "../../assets/sprites/blood.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
+import lavaSprite from "../../assets/images/lava.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
 let ballForce = 0;
@@ -13,6 +14,10 @@ let gameOver = false;
 let bg;
 let ball;
 let blood;
+let lava;
+let lavaTiles = [];
+let offset = 0;
+let boot = true;
 class TestScene extends Phaser.Scene {
   constructor(config) {
     super(config);
@@ -22,6 +27,11 @@ class TestScene extends Phaser.Scene {
     this.load.image("bg", background);
     this.load.image("ground", ground);
     this.load.image("ball", redBall);
+
+    this.load.spritesheet("lavaSprite", lavaSprite, {
+      frameWidth: 330,
+      frameHeight: 120
+    });
 
     this.load.spritesheet("bloodSprite", bloodSprite, {
       frameWidth: 32,
@@ -50,6 +60,13 @@ class TestScene extends Phaser.Scene {
     player = this.physics.add.sprite(220, 0, "playerSprite");
     blood = this.add.sprite(-1000, -1220, "bloodSprite");
     opponent = this.physics.add.sprite(420, 0, "enemySprite");
+    lava = this.physics.add.staticGroup();
+
+    for (let i = 0; i < 3; i++) {
+      let lavaTile = lava.create(offset, 580, "lavaSprite");
+      lavaTiles.push(lavaTile);
+      offset += 320;
+    }
     player.setBounce(0.45);
     player.setCollideWorldBounds(true);
     opponent.setBounce(0.45);
@@ -61,6 +78,15 @@ class TestScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("bloodSprite", {
         start: 0,
         end: 6
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+    this.anims.create({
+      key: "lavaAnim",
+      frames: this.anims.generateFrameNumbers("lavaSprite", {
+        start: 0,
+        end: 7
       }),
       frameRate: 10,
       repeat: -1
@@ -97,19 +123,25 @@ class TestScene extends Phaser.Scene {
     // colliders
     this.physics.add.collider(player, platform);
     this.physics.add.collider(opponent, platform);
-    this.physics.add.collider(player, opponent);
   }
 
   update(time) {
     if (gameOver) {
+      console.log("game over");
       return;
+    }
+    if (boot) {
+      lavaTiles.map(child => {
+        child.anims.play("lavaAnim");
+      });
+      boot = false;
     }
 
     if (cursors.space.isDown && !this.shoot) {
       this.shoot = true;
       ball = this.physics.add.sprite(player.x, player.y, "ball");
       // setting how many shoots you can do
-      this.shootCoolDownTime = time + 500;
+      this.shootCoolDownTime = time + 600;
       ball.setVelocityX(ballForce);
 
       ball.setDrag(50, 50);
@@ -152,6 +184,7 @@ class TestScene extends Phaser.Scene {
       opponent.body.touching.up
     ) {
       blood = this.add.sprite(opponent.x, opponent.y, "bloodSprite");
+      blood.anims.remove("hit");
       console.log("ouch");
       blood.anims.play("hit");
     }
