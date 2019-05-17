@@ -3,6 +3,7 @@ import bloodSprite from "../../assets/sprites/blood.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import lavaSprite from "../../assets/images/lava.png";
+import explosionSprite from "../../assets/images/explosion.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
 let ballForce = 0;
@@ -14,6 +15,8 @@ let gameOver = false;
 let bg;
 let ball;
 let blood;
+let isDead = false;
+let explosion;
 let lava;
 let lavaTiles = [];
 let offset = 0;
@@ -28,6 +31,10 @@ class TestScene extends Phaser.Scene {
     this.load.image("ground", ground);
     this.load.image("ball", redBall);
 
+    this.load.spritesheet("explosionSprite", explosionSprite, {
+      frameWidth: 105,
+      frameHeight: 104
+    });
     this.load.spritesheet("lavaSprite", lavaSprite, {
       frameWidth: 330,
       frameHeight: 120
@@ -58,13 +65,18 @@ class TestScene extends Phaser.Scene {
 
     platform.create(320, 320, "ground");
     player = this.physics.add.sprite(220, 0, "playerSprite");
-    blood = this.add.sprite(-1000, -1220, "bloodSprite");
     opponent = this.physics.add.sprite(420, 0, "enemySprite");
     lava = this.physics.add.staticGroup();
+    blood = this.add.sprite(-1000, -1000, "bloodSprite");
+    explosion = this.add.sprite(-1000, -1000, "explosionSprite");
 
     for (let i = 0; i < 3; i++) {
-      let lavaTile = lava.create(offset, 580, "lavaSprite");
+      let lavaTile = lava
+        .create(offset, 580, "lavaSprite")
+        .setSize(0, 320)
+        .setOffset(40, 40);
       lavaTiles.push(lavaTile);
+
       offset += 320;
     }
     player.setBounce(0.45);
@@ -82,6 +94,16 @@ class TestScene extends Phaser.Scene {
       frameRate: 10,
       repeat: 0
     });
+    this.anims.create({
+      key: "burn",
+      frames: this.anims.generateFrameNumbers("explosionSprite", {
+        start: 0,
+        end: 9
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+
     this.anims.create({
       key: "lavaAnim",
       frames: this.anims.generateFrameNumbers("lavaSprite", {
@@ -123,6 +145,8 @@ class TestScene extends Phaser.Scene {
     // colliders
     this.physics.add.collider(player, platform);
     this.physics.add.collider(opponent, platform);
+    this.physics.add.collider(opponent, lava);
+    this.physics.add.collider(player, lava);
   }
 
   update(time) {
@@ -178,6 +202,7 @@ class TestScene extends Phaser.Scene {
     if (cursors.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
+
     if (
       opponent.body.touching.left ||
       opponent.body.touching.right ||
@@ -185,14 +210,36 @@ class TestScene extends Phaser.Scene {
     ) {
       blood = this.add.sprite(opponent.x, opponent.y, "bloodSprite");
       blood.anims.remove("hit");
-      console.log("ouch");
       blood.anims.play("hit");
     }
+
+    lavaTiles.map(child => {
+      if (child.body.touching.up) {
+        if (!isDead) {
+          isDead = true;
+          explosion = this.add.sprite(
+            opponent.x,
+            opponent.y,
+            "explosionSprite"
+          );
+          explosion.anims.remove("burn");
+          explosion.anims.play("burn");
+        }
+      }
+    });
+    //cancels animation and removes bloodobj
     if (blood.anims && blood.anims.currentFrame != null) {
       if (blood.anims.currentFrame.index == 6) {
         blood.anims.stop("hit");
         blood.anims.remove("hit");
         blood.destroy();
+      }
+    }
+    if (explosion.anims && explosion.anims.currentFrame != null) {
+      if (explosion.anims.currentFrame.index == 9) {
+        explosion.anims.stop("burn");
+        explosion.anims.remove("burn");
+        explosion.destroy();
       }
     }
   }
