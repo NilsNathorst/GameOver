@@ -211,6 +211,9 @@ class TestScene extends Phaser.Scene {
       blood = this.add.sprite(opponent.x, opponent.y, "bloodSprite");
       blood.anims.remove("hit");
       blood.anims.play("hit");
+      blood.on("animationcomplete-" + "hit", () => {
+        blood.destroy();
+      });
     }
 
     lavaTiles.map(child => {
@@ -222,26 +225,13 @@ class TestScene extends Phaser.Scene {
             opponent.y,
             "explosionSprite"
           );
-          explosion.anims.remove("burn");
           explosion.anims.play("burn");
+          explosion.on("animationcomplete-" + "burn", () => {
+            explosion.destroy();
+          });
         }
       }
     });
-    //cancels animation and removes bloodobj
-    if (blood.anims && blood.anims.currentFrame != null) {
-      if (blood.anims.currentFrame.index == 6) {
-        blood.anims.stop("hit");
-        blood.anims.remove("hit");
-        blood.destroy();
-      }
-    }
-    if (explosion.anims && explosion.anims.currentFrame != null) {
-      if (explosion.anims.currentFrame.index == 9) {
-        explosion.anims.stop("burn");
-        explosion.anims.remove("burn");
-        explosion.destroy();
-      }
-    }
   }
 }
 
