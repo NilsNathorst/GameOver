@@ -3,8 +3,8 @@ import TestScene from "./scenes/TestScene.js";
 
 const config = {
   type: Phaser.AUTO,
-  width: 640,
-  height: 640,
+  width: 1680,
+  height: 1240,
   physics: {
     default: "arcade",
 

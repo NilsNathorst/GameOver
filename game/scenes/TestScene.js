@@ -4,9 +4,8 @@ import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
 import lavaSprite from "../../assets/sprites/lava.png";
 import explosionSprite from "../../assets/sprites/explosion.png";
-import background from "../../assets/bg.png";
+import background from "../../assets/images/background.png";
 import redBall from "../../assets/Ellipse.png";
-import cloud from "../../assets/images/cloud.png";
 let ballForce = 0;
 let player;
 let opponent;
@@ -22,8 +21,6 @@ let lava;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
-let clouds;
-
 class TestScene extends Phaser.Scene {
   constructor(config) {
     super(config);
@@ -33,7 +30,6 @@ class TestScene extends Phaser.Scene {
     this.load.image("bg", background);
     this.load.image("ground", ground);
     this.load.image("ball", redBall);
-    this.load.image("cloud", cloud);
 
     this.load.spritesheet("explosionSprite", explosionSprite, {
       frameWidth: 105,
@@ -59,19 +55,9 @@ class TestScene extends Phaser.Scene {
   }
   create() {
     // background
-    bg = this.add.sprite(400, 250, "bg");
+    bg = this.add.sprite(800, 500, "bg").setScale(1.7);
     bg.frame.cutHeight = 645;
 
-    // clouds
-    clouds = this.physics.add.staticGroup();
-    clouds.create(100, 100, "cloud");
-    clouds.create(30, 200, "cloud");
-    clouds.create(500, 160, "cloud");
-    clouds.create(400, 50, "cloud");
-    clouds.create(600, 100, "cloud");
-    clouds.create(800, 120, "cloud");
-    clouds.create(850, 200, "cloud");
-    clouds.create(1050, 50, "cloud");
     this.map = this.make.tilemap({
       key: "map"
     });
@@ -84,9 +70,9 @@ class TestScene extends Phaser.Scene {
     blood = this.add.sprite(-1000, -1000, "bloodSprite");
     explosion = this.add.sprite(-1000, -1000, "explosionSprite");
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 6; i++) {
       let lavaTile = lava
-        .create(offset, 580, "lavaSprite")
+        .create(offset, 940, "lavaSprite")
         .setSize(0, 320)
         .setOffset(40, 40);
       lavaTiles.push(lavaTile);
@@ -192,29 +178,16 @@ class TestScene extends Phaser.Scene {
     }
 
     if (cursors.left.isDown) {
-      ballForce = -400;
-
       player.setVelocityX(-160);
+      ballForce = -400;
       bg.x += 0.5;
-      clouds.children.entries.map(cloud => (cloud.x += 0.7));
-      if (bg.x > 510) {
-        bg.x -= 0.5;
-        clouds.children.entries.map(cloud => (cloud.x -= 0.7));
-      }
 
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
-      ballForce = 400;
       player.setVelocityX(160);
+      ballForce = 400;
+
       bg.x -= 0.5;
-      clouds.children.entries.map(cloud => (cloud.x -= 0.9));
-      clouds.children.entries[2].x -= 0.2;
-
-      if (bg.x < 130) {
-        bg.x += 0.5;
-        clouds.children.entries.map(cloud => (cloud.x += 0.9));
-      }
-
       player.anims.play("right", true);
     } else {
       player.setVelocityX(0);
