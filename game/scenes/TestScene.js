@@ -192,16 +192,29 @@ class TestScene extends Phaser.Scene {
     }
 
     if (cursors.left.isDown) {
-      player.setVelocityX(-160);
       ballForce = -400;
+
+      player.setVelocityX(-160);
       bg.x += 0.5;
+      clouds.children.entries.map(cloud => (cloud.x += 0.7));
+      if (bg.x > 510) {
+        bg.x -= 0.5;
+        clouds.children.entries.map(cloud => (cloud.x -= 0.7));
+      }
 
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
-      player.setVelocityX(160);
-      ballForce = 400;
-
       bg.x -= 0.5;
+      player.setVelocityX(160);
+      bg.x -= 0.5;
+      clouds.children.entries.map(cloud => (cloud.x -= 0.9));
+      clouds.children.entries[2].x -= 0.2;
+
+      if (bg.x < 130) {
+        bg.x += 0.5;
+        clouds.children.entries.map(cloud => (cloud.x += 0.9));
+      }
+
       player.anims.play("right", true);
     } else {
       player.setVelocityX(0);
