@@ -6,7 +6,7 @@ import lavaSprite from "../../assets/images/lava.png";
 import explosionSprite from "../../assets/images/explosion.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
-import cloud from "../../assets/cloud.png";
+import cloud from "../../assets/images/cloud.png";
 let ballForce = 0;
 let player;
 let opponent;
@@ -204,6 +204,7 @@ class TestScene extends Phaser.Scene {
 
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
+      ballForce = 400;
       bg.x -= 0.5;
       player.setVelocityX(160);
       bg.x -= 0.5;
