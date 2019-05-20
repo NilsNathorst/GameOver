@@ -205,7 +205,6 @@ class TestScene extends Phaser.Scene {
       player.anims.play("left", true);
     } else if (cursors.right.isDown) {
       ballForce = 400;
-      bg.x -= 0.5;
       player.setVelocityX(160);
       bg.x -= 0.5;
       clouds.children.entries.map(cloud => (cloud.x -= 0.9));
