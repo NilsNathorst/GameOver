@@ -2,8 +2,8 @@ import playerSprite from "../../assets/sprites/playerSprite.png";
 import bloodSprite from "../../assets/sprites/blood.png";
 import enemySprite from "../../assets/sprites/enemySprite.png";
 import ground from "../../assets/images/platform.png";
-import lavaSprite from "../../assets/images/lava.png";
-import explosionSprite from "../../assets/images/explosion.png";
+import lavaSprite from "../../assets/sprites/lava.png";
+import explosionSprite from "../../assets/sprites/explosion.png";
 import background from "../../assets/bg.png";
 import redBall from "../../assets/Ellipse.png";
 let ballForce = 0;
@@ -91,7 +91,7 @@ class TestScene extends Phaser.Scene {
         start: 0,
         end: 6
       }),
-      frameRate: 10,
+      frameRate: 20,
       repeat: 0
     });
     this.anims.create({
@@ -100,7 +100,7 @@ class TestScene extends Phaser.Scene {
         start: 0,
         end: 9
       }),
-      frameRate: 10,
+      frameRate: 20,
       repeat: 0
     });
 
