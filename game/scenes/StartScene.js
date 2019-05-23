@@ -38,14 +38,14 @@ class StartScene extends Phaser.Scene {
 
         setTimeout(() => {
           this.scene.stop("StartScene");
-          this.scene.start("TestScene", {
+          this.scene.start("BootScene", {
             startData: "2"
           });
         }, 3000);
       }
     });
     this.socket.on("player disconnect", userCount => {
-      socket.userCount = userCount.userCount;
+      this.socket.userCount = userCount.userCount;
       if (text !== undefined) {
         text.destroy();
       }

@@ -14,6 +14,10 @@ module.exports = io => {
       team: Math.floor(Math.random() * 2) == 0 ? "red" : "blue"
     };
 
+    io.sockets.emit("user connected", {
+      userCount
+    });
+
     io.emit("currentPlayers", players, userCount);
 
     socket.broadcast.emit("newPlayer", players[socket.id]);
