@@ -1,155 +1,109 @@
-import playerSprite from "../../assets/sprites/playerSprite.png";
-import bloodSprite from "../../assets/sprites/blood.png";
-import enemySprite from "../../assets/sprites/enemySprite.png";
-import ground from "../../assets/images/platform.png";
-import lavaSprite from "../../assets/sprites/lava.png";
-import explosionSprite from "../../assets/sprites/explosion.png";
-import background from "../../assets/images/background.png";
-import redBall from "../../assets/Ellipse.png";
-let ballForce = 0;
-let player;
-let opponent;
 let platform;
-let cursors;
 let gameOver = false;
 let bg;
-let ball;
 let blood;
-let isDead = false;
-let explosion;
 let lava;
+let scene;
+let isDead = false;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
+import Player from "../sprites/Player";
 class TestScene extends Phaser.Scene {
   constructor(config) {
-    super(config);
+    super({
+      key: "TestScene"
+    });
   }
-
   preload() {
-    this.load.image("bg", background);
-    this.load.image("ground", ground);
-    this.load.image("ball", redBall);
-
-    this.load.spritesheet("explosionSprite", explosionSprite, {
-      frameWidth: 105,
-      frameHeight: 104
-    });
-    this.load.spritesheet("lavaSprite", lavaSprite, {
-      frameWidth: 330,
-      frameHeight: 120
-    });
-
-    this.load.spritesheet("bloodSprite", bloodSprite, {
-      frameWidth: 32,
-      frameHeight: 48
-    });
-    this.load.spritesheet("playerSprite", playerSprite, {
-      frameWidth: 32,
-      frameHeight: 48
-    });
-    this.load.spritesheet("enemySprite", enemySprite, {
-      frameWidth: 32,
-      frameHeight: 48
-    });
+    scene = this;
   }
   create() {
-    // background
+    // bg
     bg = this.add.sprite(800, 500, "bg").setScale(1.7);
     bg.frame.cutHeight = 645;
 
-    this.map = this.make.tilemap({
-      key: "map"
-    });
     platform = this.physics.add.staticGroup();
-
-    platform.create(320, 320, "ground");
-    player = this.physics.add.sprite(220, 0, "playerSprite");
-    opponent = this.physics.add.sprite(420, 0, "enemySprite");
     lava = this.physics.add.staticGroup();
-    blood = this.add.sprite(-1000, -1000, "bloodSprite");
-    explosion = this.add.sprite(-1000, -1000, "explosionSprite");
+    this.players = this.add.group();
 
+    this.explosion = this.add.sprite(-1000, -1000, "explosionSprite");
+    blood = this.add.sprite(-1000, -1000, "bloodSprite");
+    platform.create(320, 320, "platformImage");
+    platform.create(640, 640, "platformImage");
+    platform.create(960, 320, "platformImage");
+
+    this.TestGuy = new Player({
+      scene: this,
+      x: 220,
+      y: 0,
+      key: "playerSprite"
+    });
+    this.Enemy = new Player({
+      scene: this,
+      x: 320,
+      y: 0,
+      key: "enemySprite"
+    });
+
+    this.players.add(this.TestGuy);
+    this.players.add(this.Enemy);
     for (let i = 0; i < 6; i++) {
       let lavaTile = lava
         .create(offset, 940, "lavaSprite")
         .setSize(0, 320)
         .setOffset(40, 40);
       lavaTiles.push(lavaTile);
-
       offset += 320;
     }
-    player.setBounce(0.45);
-    player.setCollideWorldBounds(true);
-    opponent.setBounce(0.45);
-    opponent.setDrag(50, 50);
-    opponent.setCollideWorldBounds(true);
-
-    this.anims.create({
-      key: "hit",
-      frames: this.anims.generateFrameNumbers("bloodSprite", {
-        start: 0,
-        end: 6
-      }),
-      frameRate: 20,
-      repeat: 0
-    });
-    this.anims.create({
-      key: "burn",
-      frames: this.anims.generateFrameNumbers("explosionSprite", {
-        start: 0,
-        end: 9
-      }),
-      frameRate: 20,
-      repeat: 0
-    });
-
-    this.anims.create({
-      key: "lavaAnim",
-      frames: this.anims.generateFrameNumbers("lavaSprite", {
-        start: 0,
-        end: 7
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNumbers("playerSprite", {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "turn",
-      frames: [{ key: "playerSprite", frame: 4 }],
-      frameRate: 20
-    });
-
-    this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("playerSprite", {
-        start: 5,
-        end: 8
-      }),
-      frameRate: 10,
-      repeat: 1
-    });
-
-    cursors = this.input.keyboard.createCursorKeys();
-    cursors.a = "a";
-
     // colliders
-    this.physics.add.collider(player, platform);
-    this.physics.add.collider(opponent, platform);
-    this.physics.add.collider(opponent, lava);
-    this.physics.add.collider(player, lava);
+    this.physics.add.collider(this.players, platform);
+
+    this.physics.add.collider(this.players, lava, function(player, b) {
+      if (!isDead) {
+        let bomb = scene.add.sprite(player.x, player.y, "explosionSprite");
+        isDead = true;
+        player.explode(bomb);
+      }
+    });
   }
 
-  update(time) {
+  update(time, delta) {
+    this.keys = {
+      up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP).isDown,
+      left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+        .isDown,
+      right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+        .isDown,
+      space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        .isDown
+    };
+
+    this.players.children.entries.map(player => {
+      this.vel = 0;
+      player.update(this.keys, time, delta);
+      if (player.isShooting && !this.hasShot) {
+        this.hasShot = true;
+        this.ShootCd = time + 400;
+        this.ball = this.physics.add.sprite(player.x, player.y, "ball");
+        if (player.isFacing.left) {
+          this.vel = -400;
+        } else if (player.isFacing.right) {
+          this.vel = 400;
+        }
+
+        this.ball.setVelocity(this.vel, -200);
+        this.physics.add.collider(this.players, this.ball, function(player, b) {
+          let blood = scene.add.sprite(player.x, player.y, "bloodSprite");
+          player.getHit(blood);
+        });
+        this.physics.add.collider(platform, this.ball);
+      }
+    });
+
+    if (time > this.ShootCd) {
+      this.hasShot = false;
+    }
     if (gameOver) {
       console.log("game over");
       return;
@@ -160,79 +114,6 @@ class TestScene extends Phaser.Scene {
       });
       boot = false;
     }
-
-    if (cursors.space.isDown && !this.shoot) {
-      this.shoot = true;
-      ball = this.physics.add.sprite(player.x, player.y, "ball");
-      // setting how many shoots you can do
-      this.shootCoolDownTime = time + 600;
-      ball.setVelocityX(ballForce);
-
-      ball.setDrag(50, 50);
-      ball.setBounce(0.7);
-
-      bg.x -= 0.5;
-      this.physics.add.collider(ball, platform);
-      this.physics.add.collider(ball, player);
-      this.physics.add.collider(ball, opponent);
-    }
-
-    if (cursors.left.isDown) {
-      player.setVelocityX(-160);
-      ballForce = -400;
-      bg.x += 0.5;
-
-      player.anims.play("left", true);
-    } else if (cursors.right.isDown) {
-      player.setVelocityX(160);
-      ballForce = 400;
-
-      bg.x -= 0.5;
-      player.anims.play("right", true);
-    } else {
-      player.setVelocityX(0);
-
-      player.anims.play("turn");
-    }
-
-    if (time > this.shootCoolDownTime) {
-      this.shoot = false;
-    }
-
-    if (cursors.up.isDown && player.body.touching.down) {
-      player.setVelocityY(-330);
-    }
-
-    if (
-      opponent.body.touching.left ||
-      opponent.body.touching.right ||
-      opponent.body.touching.up
-    ) {
-      blood = this.add.sprite(opponent.x, opponent.y, "bloodSprite");
-      blood.anims.remove("hit");
-      blood.anims.play("hit");
-      blood.on("animationcomplete-" + "hit", () => {
-        blood.destroy();
-      });
-    }
-
-    lavaTiles.map(child => {
-      if (child.body.touching.up) {
-        if (!isDead) {
-          isDead = true;
-          explosion = this.add.sprite(
-            opponent.x,
-            opponent.y,
-            "explosionSprite"
-          );
-          explosion.anims.play("burn");
-          explosion.on("animationcomplete-" + "burn", () => {
-            explosion.destroy();
-          });
-        }
-      }
-    });
   }
 }
-
 export default TestScene;
