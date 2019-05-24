@@ -10,6 +10,7 @@ import bgSprite from "../../assets/images/background.png";
 import redBall from "../../assets/Ellipse.png";
 import makeAnimations from "../animations/animations";
 import apple from "../../assets/apple.png";
+import heart from "../../assets/images/heart.png";
 
 class BootScene extends Phaser.Scene {
   constructor() {
@@ -37,6 +38,7 @@ class BootScene extends Phaser.Scene {
     this.load.image("platformImage", platformImage);
     this.load.image("bouncyPlatformImage", bouncyPlatformImage);
     this.load.image("ball", apple);
+    this.load.image("heart", heart);
 
     this.load.spritesheet("explosionSprite", explosionSprite, {
       frameWidth: 105,

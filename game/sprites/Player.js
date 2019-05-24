@@ -7,8 +7,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
       config.y,
       config.key,
       config.controls,
-      config.life,
-      config.name
+      config.lifes,
+      config.name,
+      config.heart
     );
     this.scene = config.scene;
     this.scene.physics.world.enable(this);
@@ -32,8 +33,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
     };
     this.controls = config.controls;
     this.key = config.key;
-    this.life = config.life;
+    this.lifes = config.lifes;
     this.name = config.name;
+    this.heart = config.heart;
   }
 
   update(keys, time, delta) {
@@ -79,8 +81,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
     sprite.on("animationcomplete-" + "hit", () => {
       sprite.destroy();
     });
-    player.life -= 1;
-    player.scoreText.setText(`${player.name}: ${player.life}`);
+    player.lifes.pop();
+
+    // console.log(heart);
     ball.disableBody(true, true);
   }
   // preUpdate(time, delta) {}
