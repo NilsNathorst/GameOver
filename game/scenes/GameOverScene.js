@@ -14,10 +14,10 @@ class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(420, 80, "GAME OVER", {
+    this.add.text(70, 80, "GAME OVER", {
       fill: "#841D11",
       fontFamily: "Impact",
-      fontSize: "80px"
+      fontSize: "250px"
     });
 
     // text.on("pointerdown", (pointer, targets) => {
