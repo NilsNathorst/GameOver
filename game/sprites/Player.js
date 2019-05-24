@@ -1,8 +1,15 @@
 import Phaser from "phaser";
-
 export default class Player extends Phaser.GameObjects.Sprite {
   constructor(config) {
-    super(config.scene, config.x, config.y, config.key, config.controls);
+    super(
+      config.scene,
+      config.x,
+      config.y,
+      config.key,
+      config.controls,
+      config.life,
+      config.name
+    );
     this.scene = config.scene;
     this.scene.physics.world.enable(this);
     this.body.setCollideWorldBounds(true);
@@ -24,6 +31,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
       right: false
     };
     this.controls = config.controls;
+    this.key = config.key;
+    this.life = config.life;
+    this.name = config.name;
   }
 
   update(keys, time, delta) {
@@ -64,11 +74,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
       sprite.destroy();
     });
   }
-  getHit(sprite) {
+  getHit(sprite, player, ball, time) {
     sprite.anims.play(this.animations.hit, true);
     sprite.on("animationcomplete-" + "hit", () => {
       sprite.destroy();
     });
+    player.life -= 1;
+    player.scoreText.setText(`${player.name}: ${player.life}`);
+    ball.disableBody(true, true);
   }
   // preUpdate(time, delta) {}
 }

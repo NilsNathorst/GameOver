@@ -8,9 +8,10 @@ let isDead = false;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
-let scoreTextTestGuy;
-let scoreTextEnemy;
-let score = 0;
+let lifeTextAdam;
+let lifeTextEve;
+let life = 0;
+let playerhasBenHit = false;
 import Player from "../sprites/Player";
 class MultiScene extends Phaser.Scene {
   constructor(config) {
@@ -36,14 +37,10 @@ class MultiScene extends Phaser.Scene {
     platform.create(640, 640, "platformImage");
     platform.create(960, 320, "platformImage");
 
-    scoreTextTestGuy = this.add.text(16, 16, "score guy: 0", {
-      fontSize: "32px",
-      fill: "red"
-    });
-    scoreTextEnemy = this.add.text(16, 40, "score enemy: 0", {
-      fontSize: "32px",
-      fill: "red"
-    });
+    // lifeTextTestGuy = this.add.text(16, 16, "life guy: 0", {
+    //   fontSize: "32px",
+    //   fill: "red"
+    // });
     let playerOne = scene.input.keyboard.addKeys({
       up: "up",
       down: "down",
@@ -58,26 +55,53 @@ class MultiScene extends Phaser.Scene {
       right: "D",
       shoot: "shift"
     });
-    this.TestGuy = new Player({
-      scene: this,
-      x: 220,
-      y: 0,
-      key: "playerSprite",
-      controls: playerOne
-    });
 
-    this.TestGuy.id = 1;
-    this.Enemy = new Player({
+    this.Adam = new Player({
       scene: this,
       x: 320,
       y: 0,
-      key: "enemySprite",
-      controls: playerTwo
+      key: "adamSprite",
+      name: "Adam",
+      controls: playerOne,
+      life: 3
     });
 
-    this.Enemy.id = 2;
-    this.players.add(this.TestGuy);
-    this.players.add(this.Enemy);
+    this.Eve = new Player({
+      scene: this,
+      x: 220,
+      y: 0,
+      key: "eveSprite",
+      name: "Eve",
+      controls: playerTwo,
+      life: 3
+    });
+
+    this.players.add(this.Adam);
+    this.players.add(this.Eve);
+    this.Eve.setScale(1.5);
+    this.Adam.setScale(1.5);
+    console.log(this.Adam);
+    this.Eve.scoreText = this.add.text(
+      16,
+      16,
+      `${this.Eve.name}: ${this.Eve.life}`,
+      {
+        fontSize: "32px",
+        fill: "red"
+      }
+    );
+    this.Adam.scoreText = this.add.text(
+      16,
+      40,
+      `${this.Adam.name}: ${this.Adam.life}`,
+      {
+        fontSize: "32px",
+        fill: "red"
+      }
+    );
+
+    console.log(blood);
+
     for (let i = 0; i < 6; i++) {
       let lavaTile = lava
         .create(offset, 940, "lavaSprite")
@@ -99,34 +123,14 @@ class MultiScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    // this.keys = {
-    //   up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP).isDown,
-    //   left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
-    //     .isDown,
-    //   right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-    //     .isDown,
-    //   space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-    //     .isDown
-    // };
-
     this.players.children.entries.map(player => {
-      //   if (player.id === 2) {
-      //     this.keys = {
-      //       up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
-      //         .isDown,
-      //       left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
-      //         .isDown,
-      //       right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-      //         .isDown,
-      //       space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
-      //         .isDown
-      //     };
-      //   }
+      //   console.log(player);
       this.vel = 0;
       player.update(this.keys, time, delta);
       if (player.isShooting && !this.hasShot) {
         this.hasShot = true;
         this.ShootCd = time + 400;
+        this.playerhasBenHit = time + 400;
         this.ball = this.physics.add.sprite(player.x, player.y, "ball");
         if (player.isFacing.left) {
           this.vel = -400;
@@ -137,21 +141,20 @@ class MultiScene extends Phaser.Scene {
         this.ball.setVelocity(this.vel, -200);
         this.physics.add.collider(this.players, this.ball, function(player, b) {
           let blood = scene.add.sprite(player.x, player.y, "bloodSprite");
-          player.getHit(blood);
+          if (!this.playerhasBenHit) {
+            this.playerhasBenHit = true;
+            player.getHit(blood, player, b);
+          }
         });
         this.physics.add.collider(platform, this.ball);
-        scene.physics.add.overlap(
-          player,
-          this.ball,
-          this.hitOpponent,
-          null,
-          this
-        );
       }
     });
 
     if (time > this.ShootCd) {
       this.hasShot = false;
+    }
+    if (time > this.playerhasBenHit) {
+      this.playerhasBenHit = false;
     }
     if (gameOver) {
       console.log("game over");
@@ -162,20 +165,6 @@ class MultiScene extends Phaser.Scene {
         child.anims.play("lavaAnim");
       });
       boot = false;
-    }
-  }
-
-  hitOpponent(player, ball) {
-    score += 1;
-    if (player.id == 2) {
-      scoreTextEnemy.setText("Score: " + score);
-    } else {
-      scoreTextTestGuy.setText("Score: " + score);
-    }
-
-    if (score === 200) {
-      console.log("win");
-      this.physics.pause();
     }
   }
 }
