@@ -13,7 +13,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
     );
     this.scene = config.scene;
     this.scene.physics.world.enable(this);
-    this.body.setCollideWorldBounds(true);
+    this.body.setCollideWorldBounds(true).setBounce(0.33);
     this.scene.add.existing(this);
     this.velocity = {
       x: 160,
@@ -25,7 +25,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
       right: `${config.key}-right`,
       turn: `${config.key}-turn`,
       hit: "hit",
-      explode: "explode"
+      explode: "explode",
+      splash: "splash"
     };
     this.isFacing = {
       left: false,
@@ -71,8 +72,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
     this.body.setVelocityY(vel);
   }
   explode(sprite) {
-    sprite.anims.play(this.animations.explode, true);
-    sprite.on("animationcomplete-" + "explode", () => {
+    sprite.anims.play(this.animations.splash, true);
+    sprite.on("animationcomplete-" + "splash", () => {
       sprite.destroy();
     });
   }
