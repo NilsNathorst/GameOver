@@ -8,10 +8,6 @@ let isDead = false;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
-let lifeTextAdam;
-let lifeTextEve;
-let life = 0;
-let playerhasBenHit = false;
 import Player from "../sprites/Player";
 class MultiScene extends Phaser.Scene {
   constructor(config) {
@@ -37,10 +33,6 @@ class MultiScene extends Phaser.Scene {
     platform.create(640, 640, "platformImage");
     platform.create(960, 320, "platformImage");
 
-    // lifeTextTestGuy = this.add.text(16, 16, "life guy: 0", {
-    //   fontSize: "32px",
-    //   fill: "red"
-    // });
     let playerOne = scene.input.keyboard.addKeys({
       up: "up",
       down: "down",
@@ -63,7 +55,7 @@ class MultiScene extends Phaser.Scene {
       key: "adamSprite",
       name: "Adam",
       controls: playerOne,
-      life: 3
+      life: 5
     });
 
     this.Eve = new Player({
@@ -73,21 +65,21 @@ class MultiScene extends Phaser.Scene {
       key: "eveSprite",
       name: "Eve",
       controls: playerTwo,
-      life: 3
+      life: 5
     });
 
     this.players.add(this.Adam);
     this.players.add(this.Eve);
     this.Eve.setScale(1.5);
     this.Adam.setScale(1.5);
-    console.log(this.Adam);
+
     this.Eve.scoreText = this.add.text(
       16,
       16,
       `${this.Eve.name}: ${this.Eve.life}`,
       {
         fontSize: "32px",
-        fill: "red"
+        fill: "green"
       }
     );
     this.Adam.scoreText = this.add.text(
@@ -96,11 +88,9 @@ class MultiScene extends Phaser.Scene {
       `${this.Adam.name}: ${this.Adam.life}`,
       {
         fontSize: "32px",
-        fill: "red"
+        fill: "green"
       }
     );
-
-    console.log(blood);
 
     for (let i = 0; i < 6; i++) {
       let lavaTile = lava
@@ -124,7 +114,6 @@ class MultiScene extends Phaser.Scene {
 
   update(time, delta) {
     this.players.children.entries.map(player => {
-      //   console.log(player);
       this.vel = 0;
       player.update(this.keys, time, delta);
       if (player.isShooting && !this.hasShot) {
@@ -141,20 +130,27 @@ class MultiScene extends Phaser.Scene {
         this.ball.setVelocity(this.vel, -200);
         this.physics.add.collider(this.players, this.ball, function(player, b) {
           let blood = scene.add.sprite(player.x, player.y, "bloodSprite");
-          if (!this.playerhasBenHit) {
-            this.playerhasBenHit = true;
+          if (!this.playerhasBeenHit) {
+            this.playerhasBeenHit = true;
             player.getHit(blood, player, b);
           }
         });
         this.physics.add.collider(platform, this.ball);
+      }
+
+      if (player.life <= 0) {
+        this.scene.stop("MultiScene");
+        this.scene.start("StartScene", {
+          startData: "4"
+        });
       }
     });
 
     if (time > this.ShootCd) {
       this.hasShot = false;
     }
-    if (time > this.playerhasBenHit) {
-      this.playerhasBenHit = false;
+    if (time > this.playerhasBeenHit) {
+      this.playerhasBeenHit = false;
     }
     if (gameOver) {
       console.log("game over");

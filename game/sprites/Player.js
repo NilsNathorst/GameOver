@@ -74,7 +74,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
       sprite.destroy();
     });
   }
-  getHit(sprite, player, ball, time) {
+  getHit(sprite, player, ball) {
     sprite.anims.play(this.animations.hit, true);
     sprite.on("animationcomplete-" + "hit", () => {
       sprite.destroy();

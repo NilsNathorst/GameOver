@@ -3,12 +3,13 @@ import TestScene from "./scenes/TestScene.js";
 import BootScene from "./scenes/BootScene.js";
 import StartScene from "./scenes/StartScene.js";
 import MultiScene from "./scenes/MultiScene.js";
+import GameOverScene from "./scenes/GameOverScene.js";
 
 const config = {
   type: Phaser.AUTO,
   width: 1680,
   height: 1240,
-  backgroundColor: "rgb(75,21,12)",
+  backgroundColor: "aqua",
   physics: {
     default: "arcade",
 
@@ -20,7 +21,7 @@ const config = {
     }
   },
 
-  scene: [BootScene, MultiScene]
+  scene: [StartScene, BootScene, MultiScene, GameOverScene]
 };
 const createGame = () => {
   game = new Phaser.Game(config);
