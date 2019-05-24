@@ -44,11 +44,26 @@ class MultiScene extends Phaser.Scene {
       fontSize: "32px",
       fill: "red"
     });
+    let playerOne = scene.input.keyboard.addKeys({
+      up: "up",
+      down: "down",
+      left: "left",
+      right: "right",
+      shoot: "space"
+    });
+    let playerTwo = scene.input.keyboard.addKeys({
+      up: "W",
+      down: "S",
+      left: "A",
+      right: "D",
+      shoot: "shift"
+    });
     this.TestGuy = new Player({
       scene: this,
       x: 220,
       y: 0,
-      key: "playerSprite"
+      key: "playerSprite",
+      controls: playerOne
     });
 
     this.TestGuy.id = 1;
@@ -56,7 +71,8 @@ class MultiScene extends Phaser.Scene {
       scene: this,
       x: 320,
       y: 0,
-      key: "enemySprite"
+      key: "enemySprite",
+      controls: playerTwo
     });
 
     this.Enemy.id = 2;
@@ -83,29 +99,29 @@ class MultiScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.keys = {
-      up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP).isDown,
-      left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
-        .isDown,
-      right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-        .isDown,
-      space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-        .isDown
-    };
+    // this.keys = {
+    //   up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP).isDown,
+    //   left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+    //     .isDown,
+    //   right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+    //     .isDown,
+    //   space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+    //     .isDown
+    // };
 
     this.players.children.entries.map(player => {
-      if (player.id === 2) {
-        this.keys = {
-          up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
-            .isDown,
-          left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
-            .isDown,
-          right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-            .isDown,
-          space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
-            .isDown
-        };
-      }
+      //   if (player.id === 2) {
+      //     this.keys = {
+      //       up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+      //         .isDown,
+      //       left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
+      //         .isDown,
+      //       right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+      //         .isDown,
+      //       space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
+      //         .isDown
+      //     };
+      //   }
       this.vel = 0;
       player.update(this.keys, time, delta);
       if (player.isShooting && !this.hasShot) {
@@ -150,11 +166,16 @@ class MultiScene extends Phaser.Scene {
   }
 
   hitOpponent(player, ball) {
-    score += 10;
+    score += 1;
     if (player.id == 2) {
       scoreTextEnemy.setText("Score: " + score);
     } else {
       scoreTextTestGuy.setText("Score: " + score);
+    }
+
+    if (score === 200) {
+      console.log("win");
+      this.physics.pause();
     }
   }
 }
