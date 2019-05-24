@@ -20,12 +20,9 @@ class GameOverScene extends Phaser.Scene {
       fontSize: "80px"
     });
 
-    setTimeout(() => {
-      this.scene.stop("GameOverScene");
-      this.scene.start("StartScene", {
-        startData: "1"
-      });
-    }, 3000);
+    // text.on("pointerdown", (pointer, targets) => {
+    //   this.scene.start("StartScene");
+    // });
   }
 }
 export default GameOverScene;

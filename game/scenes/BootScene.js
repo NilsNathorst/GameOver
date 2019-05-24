@@ -28,7 +28,9 @@ class BootScene extends Phaser.Scene {
       makeAnimations(this);
       progress.destroy();
       // this.scene.start("TestScene");
-      this.scene.start("MultiScene");
+      this.scene.start("MultiScene", {
+        startData: "3"
+      });
     });
 
     this.load.image("bg", bgSprite);

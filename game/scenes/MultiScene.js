@@ -8,6 +8,8 @@ let isDead = false;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
+
+// få bollen att väga mer och slår iväg spelare
 import Player from "../sprites/Player";
 class MultiScene extends Phaser.Scene {
   constructor(config) {
@@ -72,7 +74,6 @@ class MultiScene extends Phaser.Scene {
     this.players.add(this.Eve);
     this.Eve.setScale(1.5);
     this.Adam.setScale(1.5);
-
     this.Eve.scoreText = this.add.text(
       16,
       16,
@@ -140,7 +141,7 @@ class MultiScene extends Phaser.Scene {
 
       if (player.life <= 0) {
         this.scene.stop("MultiScene");
-        this.scene.start("StartScene", {
+        this.scene.start("GameOverScene", {
           startData: "4"
         });
       }
