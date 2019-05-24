@@ -6,8 +6,8 @@ import platformImage from "../../assets/images/platform.png";
 import bouncyPlatformImage from "../../assets/images/bouncyPlatform.png";
 import lavaSprite from "../../assets/sprites/lava.png";
 import explosionSprite from "../../assets/sprites/explosion.png";
+import splashSprite from "../../assets/sprites/splash.png";
 import bgSprite from "../../assets/images/background.png";
-import redBall from "../../assets/Ellipse.png";
 import makeAnimations from "../animations/animations";
 import apple from "../../assets/apple.png";
 
@@ -37,6 +37,10 @@ class BootScene extends Phaser.Scene {
     this.load.image("ball", apple);
 
     this.load.spritesheet("explosionSprite", explosionSprite, {
+      frameWidth: 105,
+      frameHeight: 104
+    });
+    this.load.spritesheet("splashSprite", splashSprite, {
       frameWidth: 105,
       frameHeight: 104
     });

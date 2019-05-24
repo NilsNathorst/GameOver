@@ -20,19 +20,31 @@ class MultiScene extends Phaser.Scene {
   }
   create() {
     // bg
-    bg = this.add.sprite(800, 500, "bg").setScale(1.7);
-    bg.frame.cutHeight = 645;
+    bg = this.add.sprite(800, 500, "bg").setScale(1);
 
     platform = this.physics.add.staticGroup();
     lava = this.physics.add.staticGroup();
     this.players = this.add.group();
 
-    this.explosion = this.add.sprite(-1000, -1000, "explosionSprite");
+    this.explosion = this.add.sprite(-1000, -1000, "splashSprite");
     blood = this.add.sprite(-1000, -1000, "bloodSprite");
-    platform.create(320, 320, "platformImage");
-    platform.create(640, 640, "platformImage");
-    platform.create(960, 320, "platformImage");
-
+    platform
+      .create(320, 320, "platformImage")
+      .setSize(180, 20)
+      .setOffset(12, 6);
+    platform
+      .create(820, 320, "platformImage")
+      .setSize(180, 20)
+      .setOffset(12, 6);
+    platform
+      .create(1220, 320, "platformImage")
+      .setSize(180, 20)
+      .setOffset(12, 6);
+    platform
+      .create(520, 520, "platformImage")
+      .setSize(180, 20)
+      .setOffset(12, 6);
+    this.physics.world.defaults.debugShowBody = true;
     let playerOne = scene.input.keyboard.addKeys({
       up: "up",
       down: "down",
@@ -72,7 +84,6 @@ class MultiScene extends Phaser.Scene {
     this.players.add(this.Eve);
     this.Eve.setScale(1.5);
     this.Adam.setScale(1.5);
-
     this.Eve.scoreText = this.add.text(
       16,
       16,
@@ -96,16 +107,17 @@ class MultiScene extends Phaser.Scene {
       let lavaTile = lava
         .create(offset, 940, "lavaSprite")
         .setSize(0, 320)
-        .setOffset(40, 40);
+        .setOffset(40, 40)
+        .setScale(1.5);
       lavaTiles.push(lavaTile);
-      offset += 320;
+      offset += 478;
     }
     // colliders
     this.physics.add.collider(this.players, platform);
 
     this.physics.add.collider(this.players, lava, function(player, b) {
       if (!isDead) {
-        let bomb = scene.add.sprite(player.x, player.y, "explosionSprite");
+        let bomb = scene.add.sprite(player.x, player.y + 11, "splashSprite");
         isDead = true;
         player.explode(bomb);
       }
@@ -121,6 +133,11 @@ class MultiScene extends Phaser.Scene {
         this.ShootCd = time + 400;
         this.playerhasBenHit = time + 400;
         this.ball = this.physics.add.sprite(player.x, player.y, "ball");
+        this.ball.body
+          .setBounce(0.33)
+          .setDrag(50, 50)
+          .setMass(10);
+
         if (player.isFacing.left) {
           this.vel = -400;
         } else if (player.isFacing.right) {
