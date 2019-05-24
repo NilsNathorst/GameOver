@@ -14,18 +14,15 @@ class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(420, 80, "GAME OVER", {
+    this.add.text(70, 80, "GAME OVER", {
       fill: "#841D11",
       fontFamily: "Impact",
-      fontSize: "80px"
+      fontSize: "250px"
     });
 
-    setTimeout(() => {
-      this.scene.stop("GameOverScene");
-      this.scene.start("StartScene", {
-        startData: "1"
-      });
-    }, 3000);
+    // text.on("pointerdown", (pointer, targets) => {
+    //   this.scene.start("StartScene");
+    // });
   }
 }
 export default GameOverScene;

@@ -10,6 +10,7 @@ import splashSprite from "../../assets/sprites/splash.png";
 import bgSprite from "../../assets/images/background.png";
 import makeAnimations from "../animations/animations";
 import apple from "../../assets/apple.png";
+import heart from "../../assets/images/heart.png";
 
 class BootScene extends Phaser.Scene {
   constructor() {
@@ -28,13 +29,16 @@ class BootScene extends Phaser.Scene {
       makeAnimations(this);
       progress.destroy();
       // this.scene.start("TestScene");
-      this.scene.start("MultiScene");
+      this.scene.start("MultiScene", {
+        startData: "3"
+      });
     });
 
     this.load.image("bg", bgSprite);
     this.load.image("platformImage", platformImage);
     this.load.image("bouncyPlatformImage", bouncyPlatformImage);
     this.load.image("ball", apple);
+    this.load.image("heart", heart);
 
     this.load.spritesheet("explosionSprite", explosionSprite, {
       frameWidth: 105,

@@ -8,6 +8,8 @@ let isDead = false;
 let lavaTiles = [];
 let offset = 0;
 let boot = true;
+
+// få bollen att väga mer och slår iväg spelare
 import Player from "../sprites/Player";
 class MultiScene extends Phaser.Scene {
   constructor(config) {
@@ -59,6 +61,8 @@ class MultiScene extends Phaser.Scene {
       right: "D",
       shoot: "shift"
     });
+    this.adamHearts = this.physics.add.staticGroup();
+    this.eveHearts = this.physics.add.staticGroup();
 
     this.Adam = new Player({
       scene: this,
@@ -67,7 +71,7 @@ class MultiScene extends Phaser.Scene {
       key: "adamSprite",
       name: "Adam",
       controls: playerOne,
-      life: 5
+      lifes: [1, 2, 3, 4, 5]
     });
 
     this.Eve = new Player({
@@ -77,31 +81,27 @@ class MultiScene extends Phaser.Scene {
       key: "eveSprite",
       name: "Eve",
       controls: playerTwo,
-      life: 5
+      lifes: [1, 2, 3, 4, 5]
     });
 
     this.players.add(this.Adam);
     this.players.add(this.Eve);
     this.Eve.setScale(1.5);
     this.Adam.setScale(1.5);
-    this.Eve.scoreText = this.add.text(
-      16,
-      16,
-      `${this.Eve.name}: ${this.Eve.life}`,
-      {
-        fontSize: "32px",
-        fill: "green"
-      }
-    );
-    this.Adam.scoreText = this.add.text(
-      16,
-      40,
-      `${this.Adam.name}: ${this.Adam.life}`,
-      {
-        fontSize: "32px",
-        fill: "green"
-      }
-    );
+
+    this.Adam.hearts = this.adamHearts;
+    this.adamHearts.create(1050, 50, "heart"),
+      this.adamHearts.create(1100, 50, "heart"),
+      this.adamHearts.create(1150, 50, "heart"),
+      this.adamHearts.create(1200, 50, "heart"),
+      this.adamHearts.create(1250, 50, "heart");
+
+    this.Eve.hearts = this.eveHearts;
+    this.eveHearts.create(250, 50, "heart");
+    this.eveHearts.create(200, 50, "heart");
+    this.eveHearts.create(150, 50, "heart");
+    this.eveHearts.create(100, 50, "heart");
+    this.eveHearts.create(50, 50, "heart");
 
     for (let i = 0; i < 6; i++) {
       let lavaTile = lava
@@ -150,14 +150,14 @@ class MultiScene extends Phaser.Scene {
           if (!this.playerhasBeenHit) {
             this.playerhasBeenHit = true;
             player.getHit(blood, player, b);
+            player.hearts.remove(player.hearts.children.entries[0], true);
           }
         });
         this.physics.add.collider(platform, this.ball);
       }
-
-      if (player.life <= 0) {
+      if (player.lifes <= 0) {
         this.scene.stop("MultiScene");
-        this.scene.start("StartScene", {
+        this.scene.start("GameOverScene", {
           startData: "4"
         });
       }

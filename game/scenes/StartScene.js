@@ -14,13 +14,13 @@ class StartScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(420, 80, "GAME OVER", {
+    this.add.text(370, 200, "Trouble in paradise ", {
       fill: "#841D11",
       fontFamily: "Impact",
       fontSize: "80px"
     });
 
-    this.add.text(310, 500, "Get redy to FIGHT!", {
+    this.add.text(470, 400, "Get redy to FIGHT!", {
       fill: "#fff",
       fontSize: "40px"
     });
@@ -30,7 +30,7 @@ class StartScene extends Phaser.Scene {
       this.scene.start("BootScene", {
         startData: "2"
       });
-    }, 200);
+    }, 300);
   }
 }
 export default StartScene;
