@@ -30,7 +30,7 @@ class StartScene extends Phaser.Scene {
       this.scene.start("BootScene", {
         startData: "2"
       });
-    }, 3000);
+    }, 200);
   }
 }
 export default StartScene;

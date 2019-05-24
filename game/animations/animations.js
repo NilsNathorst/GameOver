@@ -18,6 +18,15 @@ export default function makeAnimations(scene) {
     frameRate: 20,
     repeat: 0
   });
+  scene.anims.create({
+    key: "splash",
+    frames: scene.anims.generateFrameNumbers("splashSprite", {
+      start: 0,
+      end: 7
+    }),
+    frameRate: 20,
+    repeat: 0
+  });
 
   scene.anims.create({
     key: "lavaAnim",
