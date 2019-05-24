@@ -1,7 +1,7 @@
 import Phaser from "phaser";
-import playerSprite from "../../assets/sprites/playerSprite.png";
+import adamSprite from "../../assets/sprites/adamSprite.png";
 import bloodSprite from "../../assets/sprites/blood.png";
-import enemySprite from "../../assets/sprites/enemySprite.png";
+import eveSprite from "../../assets/sprites/eveSprite.png";
 import platformImage from "../../assets/images/platform.png";
 import bouncyPlatformImage from "../../assets/images/bouncyPlatform.png";
 import lavaSprite from "../../assets/sprites/lava.png";
@@ -9,6 +9,7 @@ import explosionSprite from "../../assets/sprites/explosion.png";
 import bgSprite from "../../assets/images/background.png";
 import redBall from "../../assets/Ellipse.png";
 import makeAnimations from "../animations/animations";
+import apple from "../../assets/apple.png";
 
 class BootScene extends Phaser.Scene {
   constructor() {
@@ -26,13 +27,14 @@ class BootScene extends Phaser.Scene {
       // prepare all animations, defined in a separate file
       makeAnimations(this);
       progress.destroy();
-      this.scene.start("TestScene");
+      // this.scene.start("TestScene");
+      this.scene.start("MultiScene");
     });
 
     this.load.image("bg", bgSprite);
     this.load.image("platformImage", platformImage);
     this.load.image("bouncyPlatformImage", bouncyPlatformImage);
-    this.load.image("ball", redBall);
+    this.load.image("ball", apple);
 
     this.load.spritesheet("explosionSprite", explosionSprite, {
       frameWidth: 105,
@@ -47,11 +49,11 @@ class BootScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48
     });
-    this.load.spritesheet("playerSprite", playerSprite, {
+    this.load.spritesheet("adamSprite", adamSprite, {
       frameWidth: 32,
       frameHeight: 48
     });
-    this.load.spritesheet("enemySprite", enemySprite, {
+    this.load.spritesheet("eveSprite", eveSprite, {
       frameWidth: 32,
       frameHeight: 48
     });

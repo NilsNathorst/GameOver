@@ -1,9 +1,9 @@
 let text;
-class StartScene extends Phaser.Scene {
+class GameOverScene extends Phaser.Scene {
   constructor(config) {
     super(
       {
-        key: "StartScene"
+        key: "GameOverScene"
       },
       config
     );
@@ -20,17 +20,12 @@ class StartScene extends Phaser.Scene {
       fontSize: "80px"
     });
 
-    this.add.text(310, 500, "Get redy to FIGHT!", {
-      fill: "#fff",
-      fontSize: "40px"
-    });
-
     setTimeout(() => {
-      this.scene.stop("StartScene");
-      this.scene.start("BootScene", {
-        startData: "2"
+      this.scene.stop("GameOverScene");
+      this.scene.start("StartScene", {
+        startData: "1"
       });
     }, 3000);
   }
 }
-export default StartScene;
+export default GameOverScene;

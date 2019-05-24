@@ -30,8 +30,8 @@ export default function makeAnimations(scene) {
   });
 
   scene.anims.create({
-    key: "playerSprite-left",
-    frames: scene.anims.generateFrameNumbers("playerSprite", {
+    key: "adamSprite-left",
+    frames: scene.anims.generateFrameNumbers("adamSprite", {
       start: 0,
       end: 3
     }),
@@ -40,14 +40,14 @@ export default function makeAnimations(scene) {
   });
 
   scene.anims.create({
-    key: "playerSprite-turn",
-    frames: [{ key: "playerSprite", frame: 4 }],
+    key: "adamSprite-turn",
+    frames: [{ key: "adamSprite", frame: 4 }],
     frameRate: 20
   });
 
   scene.anims.create({
-    key: "playerSprite-right",
-    frames: scene.anims.generateFrameNumbers("playerSprite", {
+    key: "adamSprite-right",
+    frames: scene.anims.generateFrameNumbers("adamSprite", {
       start: 5,
       end: 8
     }),
@@ -55,8 +55,8 @@ export default function makeAnimations(scene) {
     repeat: 1
   });
   scene.anims.create({
-    key: "enemySprite-left",
-    frames: scene.anims.generateFrameNumbers("enemySprite", {
+    key: "eveSprite-left",
+    frames: scene.anims.generateFrameNumbers("eveSprite", {
       start: 0,
       end: 3
     }),
@@ -65,14 +65,14 @@ export default function makeAnimations(scene) {
   });
 
   scene.anims.create({
-    key: "enemySprite-turn",
-    frames: [{ key: "enemySprite", frame: 4 }],
+    key: "eveSprite-turn",
+    frames: [{ key: "eveSprite", frame: 4 }],
     frameRate: 20
   });
 
   scene.anims.create({
-    key: "enemySprite-right",
-    frames: scene.anims.generateFrameNumbers("enemySprite", {
+    key: "eveSprite-right",
+    frames: scene.anims.generateFrameNumbers("eveSprite", {
       start: 5,
       end: 8
     }),

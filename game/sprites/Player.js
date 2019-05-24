@@ -1,8 +1,15 @@
 import Phaser from "phaser";
-
 export default class Player extends Phaser.GameObjects.Sprite {
   constructor(config) {
-    super(config.scene, config.x, config.y, config.key);
+    super(
+      config.scene,
+      config.x,
+      config.y,
+      config.key,
+      config.controls,
+      config.life,
+      config.name
+    );
     this.scene = config.scene;
     this.scene.physics.world.enable(this);
     this.body.setCollideWorldBounds(true);
@@ -23,16 +30,20 @@ export default class Player extends Phaser.GameObjects.Sprite {
       left: false,
       right: false
     };
+    this.controls = config.controls;
+    this.key = config.key;
+    this.life = config.life;
+    this.name = config.name;
   }
 
   update(keys, time, delta) {
     this.run(0);
-    if (keys.left) {
+    if (this.controls.left.isDown) {
       this.isFacing.left = true;
       this.isFacing.right = false;
       this.run(-this.velocity.x);
       this.anims.play(this.animations.left, true);
-    } else if (keys.right) {
+    } else if (this.controls.right.isDown) {
       this.isFacing.right = true;
       this.isFacing.left = false;
       this.run(this.velocity.x);
@@ -40,10 +51,10 @@ export default class Player extends Phaser.GameObjects.Sprite {
     } else {
       this.anims.play(this.animations.turn, true);
     }
-    if (keys.up && this.body.touching.down) {
+    if (this.controls.up.isDown && this.body.touching.down) {
       this.jump(this.velocity.y);
     }
-    if (keys.space && !this.isShooting) {
+    if (this.controls.shoot.isDown && !this.isShooting) {
       this.isShooting = true;
       this.ShootCd = time + 400;
     }
@@ -63,11 +74,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
       sprite.destroy();
     });
   }
-  getHit(sprite) {
+  getHit(sprite, player, ball) {
     sprite.anims.play(this.animations.hit, true);
     sprite.on("animationcomplete-" + "hit", () => {
       sprite.destroy();
     });
+    player.life -= 1;
+    player.scoreText.setText(`${player.name}: ${player.life}`);
+    ball.disableBody(true, true);
   }
   // preUpdate(time, delta) {}
 }
