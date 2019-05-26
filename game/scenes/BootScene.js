@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import adamSprite from "../../assets/sprites/adamSprite.png";
 import bloodSprite from "../../assets/sprites/blood.png";
 import eveSprite from "../../assets/sprites/eveSprite.png";
+import birdSprite from "../../assets/sprites/birdSprite.png";
 import platformImage from "../../assets/images/platform.png";
 import bouncyPlatformImage from "../../assets/images/bouncyPlatform.png";
 import lavaSprite from "../../assets/sprites/lava.png";
@@ -64,6 +65,10 @@ class BootScene extends Phaser.Scene {
     this.load.spritesheet("eveSprite", eveSprite, {
       frameWidth: 32,
       frameHeight: 48
+    });
+    this.load.spritesheet("birdSprite", birdSprite, {
+      frameWidth: 62,
+      frameHeight: 62
     });
   }
 }

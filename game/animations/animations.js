@@ -19,6 +19,15 @@ export default function makeAnimations(scene) {
     repeat: 0
   });
   scene.anims.create({
+    key: "birdAnim",
+    frames: scene.anims.generateFrameNumbers("birdSprite", {
+      start: 0,
+      end: 9
+    }),
+    frameRate: 12,
+    repeat: -1
+  });
+  scene.anims.create({
     key: "splash",
     frames: scene.anims.generateFrameNumbers("splashSprite", {
       start: 0,

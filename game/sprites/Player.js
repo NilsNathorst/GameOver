@@ -13,12 +13,16 @@ export default class Player extends Phaser.GameObjects.Sprite {
     );
     this.scene = config.scene;
     this.scene.physics.world.enable(this);
-    this.body.setCollideWorldBounds(true).setBounce(0.33);
+    this.body
+      .setCollideWorldBounds(true)
+      .setBounce(0.33)
+      .setMass(1);
     this.scene.add.existing(this);
     this.velocity = {
       x: 160,
       y: -430
     };
+
     this.isShooting = false;
     this.animations = {
       left: `${config.key}-left`,
@@ -77,15 +81,12 @@ export default class Player extends Phaser.GameObjects.Sprite {
       sprite.destroy();
     });
   }
-  getHit(sprite, player, ball) {
+  getHit(sprite, player) {
     sprite.anims.play(this.animations.hit, true);
     sprite.on("animationcomplete-" + "hit", () => {
       sprite.destroy();
     });
     player.lifes.pop();
-
-    // console.log(heart);
-    ball.disableBody(true, true);
   }
   // preUpdate(time, delta) {}
 }

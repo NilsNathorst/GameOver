@@ -25,11 +25,22 @@ class MultiScene extends Phaser.Scene {
     bg = this.add.sprite(800, 500, "bg").setScale(1);
 
     platform = this.physics.add.staticGroup();
+    this.bouncyPlatform = this.physics.add.staticGroup();
+    this.birds = this.physics.add.staticGroup();
     lava = this.physics.add.staticGroup();
     this.players = this.add.group();
 
     this.explosion = this.add.sprite(-1000, -1000, "splashSprite");
     blood = this.add.sprite(-1000, -1000, "bloodSprite");
+    this.bouncyPlatform.create(600, 400, "bouncyPlatformImage");
+    this.bouncyPlatform.create(500, 400, "bouncyPlatformImage");
+    this.birds.create(500, 400, "birdSprite");
+    this.birds.children.entries.map(bird => {
+      bird.anims.play("birdAnim", true);
+    });
+    this.bouncyPlatform.children.entries.map(bouncy => {
+      bouncy.visible = false;
+    });
     platform
       .create(320, 320, "platformImage")
       .setSize(180, 20)
@@ -46,7 +57,6 @@ class MultiScene extends Phaser.Scene {
       .create(520, 520, "platformImage")
       .setSize(180, 20)
       .setOffset(12, 6);
-    this.physics.world.defaults.debugShowBody = true;
     let playerOne = scene.input.keyboard.addKeys({
       up: "up",
       down: "down",
@@ -88,7 +98,7 @@ class MultiScene extends Phaser.Scene {
     this.players.add(this.Eve);
     this.Eve.setScale(1.5);
     this.Adam.setScale(1.5);
-
+    console.log(this.Adam.body);
     this.Adam.hearts = this.adamHearts;
     this.adamHearts.create(1050, 50, "heart"),
       this.adamHearts.create(1100, 50, "heart"),
@@ -114,6 +124,12 @@ class MultiScene extends Phaser.Scene {
     }
     // colliders
     this.physics.add.collider(this.players, platform);
+    this.physics.add.collider(this.players, this.bouncyPlatform, function(
+      player,
+      platform
+    ) {
+      player.body.setVelocityY(-730);
+    });
 
     this.physics.add.collider(this.players, lava, function(player, b) {
       if (!isDead) {
@@ -134,26 +150,34 @@ class MultiScene extends Phaser.Scene {
         this.playerhasBenHit = time + 400;
         this.ball = this.physics.add.sprite(player.x, player.y, "ball");
         this.ball.body
-          .setBounce(0.33)
-          .setDrag(50, 50)
-          .setMass(10);
+          .setBounce(0.45)
+          .setDrag(50, 20)
+          .setMass(8);
 
         if (player.isFacing.left) {
           this.vel = -400;
         } else if (player.isFacing.right) {
           this.vel = 400;
         }
-
         this.ball.setVelocity(this.vel, -200);
-        this.physics.add.collider(this.players, this.ball, function(player, b) {
-          let blood = scene.add.sprite(player.x, player.y, "bloodSprite");
+        this.physics.add.collider(this.players, this.ball, function(
+          player,
+          ball
+        ) {
           if (!this.playerhasBeenHit) {
             this.playerhasBeenHit = true;
-            player.getHit(blood, player, b);
+            let blood = scene.add.sprite(player.x, player.y, "bloodSprite");
+            player.getHit(blood, player);
             player.hearts.remove(player.hearts.children.entries[0], true);
           }
         });
         this.physics.add.collider(platform, this.ball);
+        this.physics.add.collider(this.bouncyPlatform, this.ball, function(
+          ball,
+          platform
+        ) {
+          ball.setVelocityY(-600);
+        });
       }
       if (player.lifes <= 0) {
         this.scene.stop("MultiScene");
