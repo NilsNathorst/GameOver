@@ -41,6 +41,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
     this.lifes = config.lifes;
     this.name = config.name;
     this.heart = config.heart;
+    this.isDead = false;
   }
 
   update(keys, time, delta) {
@@ -80,6 +81,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
     sprite.on("animationcomplete-" + "splash", () => {
       sprite.destroy();
     });
+    this.isDead = true;
   }
   getHit(sprite, player) {
     sprite.anims.play(this.animations.hit, true);
