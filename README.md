@@ -2,7 +2,8 @@
 
 Test the game live [here](https://troubleinparadise.netlify.com/)
 
-#Tech
+# Tech
+
 Phaser 3
 
 # Pull Requests
@@ -32,7 +33,7 @@ Phaser 3
 - [#24 Added bouncy bird ](https://github.com/NilsNathorst/GameOver/pull/24)
 - [#25 Added gameover when hit water](https://github.com/NilsNathorst/GameOver/pull/25)
 
-#Tested
+# Tested
 
 - Lovisa Hallgren
 - Charmaine Wang
@@ -44,7 +45,11 @@ Phaser 3
 - Vanessa Larsson
 - Madeleine Dufva
 
-#Creators
+# Creators
 
 - [Izabella Larsson](https://github.com/izabellalarsson/)
 - [Nils Nathorst-Windahl](https://github.com/NilsNathorst)
+
+# Feedback
+
+- [To group 12](https://github.com/linn2punkt0/Come-on-tomato/pull/60)
