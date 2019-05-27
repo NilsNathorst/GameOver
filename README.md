@@ -48,3 +48,15 @@ Phaser 3
 
 - [Izabella Larsson](https://github.com/izabellalarsson/)
 - [Nils Nathorst-Windahl](https://github.com/NilsNathorst)
+
+# Feedback from group 10
+- Nice indentation.
+- Nice file structure.
+- In GameOverScene.js 23, remove unused code snippet.
+- Some files are unused, like DS_Store. Maybe you should add this to your .gitignore.
+- Many imports from assets directory, like in BootScene. Maybe you could use a program like TexturePackage to import the files i the same file.
+- In BootScene.js 31, remove unused code snippet.
+- In MultiScene.js 12, one comment in swedish.
+- Good names on functions and variables through the projects.
+- Nice that you use a BootScene to load resouce before the game starts.
+- Maybe the TestScene should been removed or add to the .gitignore.
